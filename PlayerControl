@@ -48,7 +48,7 @@ local data = {
              ["inline"] = true
             },
             {
-             ["name"] = "**Script ID:**",
+             ["name"] = "**Script Used:**",
              ["value"] = _G.ScriptID,
              ["inline"] = true
             },
