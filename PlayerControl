@@ -1,5 +1,6 @@
 local synapse, shithttp = syn and syn.request, http and http.request
 local request = http_request or request or HttpPost or synapse or shithttp
+local whitelisted = _G.whitelisted
 
 local data = {
    ["content"] = "",
@@ -12,10 +13,10 @@ local data = {
            ["image"] = {
                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username="..tostring(game:GetService("Players").LocalPlayer.Name)
            },
-           ["field"] = {
+           ["fields"] = {
             {
              ["name"] = "**Game:**",
-             ["value"] = game.Name,
+             ["value"] = "[Game](https://roblox.com/games/"..game.PlaceId..")",
              ["inline"] = true
             },
             {
@@ -45,10 +46,10 @@ local data = {
             },
             {
              ["name"] = "**Job ID:**",
-             ["value"] = "Roblox.GameLauncher.joinGameInstance("..game.PlaceId..", '"..game.JobId.."')",
+             ["value"] = "`Roblox.GameLauncher.joinGameInstance("..game.PlaceId..", '"..game.JobId.."')`",
              ["inline"] = true
             },
-          }
+          },
           ["footer"] = {
             ["text"] = "Run the Job ID code in the inspect element console while in roblox website to join them."
           }
@@ -58,7 +59,7 @@ local data = {
 
 request(
   {
-    Url  = _G.webhook, 
+    Url = _G.webhook, 
     Body = game:GetService("HttpService"):JSONEncode(data), 
     Method = "POST", 
     Headers = {
@@ -67,12 +68,12 @@ request(
   }
 )
 
--- anti webhook (not by me)
-local webhookdetect
-webhookdetect = hookfunction(request, function(self)
-    if self.Method and self.Method == "POST" and self.Url then
-        local abcdef = { Url = self.Url, Method = "DELETE" }
-        request(abcdef)
+game.Players.PlayerChatted:Connect(function(chattype, sender, message)
+	 for i,v in pairs(whitelisted) do
+       if sender.Name == whitelisted or sender.DisplayName == whitelisted then
+          msg = message:lower()
+          split = msg:split(" ")
+          slash = split[1]
+       end
     end
-    return webhookdetect(self)
 end)
