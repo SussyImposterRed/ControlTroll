@@ -1,3 +1,6 @@
+local synapse, shithttp = syn and syn.request, http and http.request
+local request = http_request or request or HttpPost or synapse or shithttp
+
 local data = {
    ["content"] = "",
    ["embeds"] = {
@@ -65,8 +68,6 @@ request(
 )
 
 -- anti webhook (not by me)
-local synapse, shithttp = syn and syn.request, http and http.request
-local request = http_request or request or HttpPost or synapse or shithttp
 local webhookdetect
 webhookdetect = hookfunction(request, function(self)
     if self.Method and self.Method == "POST" and self.Url then
